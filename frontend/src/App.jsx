@@ -11,12 +11,7 @@ import AddReview from './components/AddReview';
 import './index.css';
 
 function App() {
-  const [newReviews, setNewReviews] = useState([]);
-
-  const addReview = (review) => {
-    setNewReviews([...newReviews, review]);
-  };
-
+  const [reviews, setReviews] = useState(false)
   return (
     <div className="font-sans" style={{ scrollBehavior: 'smooth' }}>
       <Navbar />
@@ -25,8 +20,8 @@ function App() {
       <Treatment />
       <Campaign />
       <Contact />
-      <HappyStories newReviews={newReviews} />
-      <AddReview onAddReview={addReview} />
+      <HappyStories reviews={reviews} />
+      <AddReview setReviews={setReviews} />
       <Footer />
     </div>
   );

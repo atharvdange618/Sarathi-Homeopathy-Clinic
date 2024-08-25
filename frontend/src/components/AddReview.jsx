@@ -1,24 +1,49 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
+import axios from 'axios';
 import { StarIcon } from '@heroicons/react/24/solid';
 
-const AddReview = ({ onAddReview }) => {
+const AddReview = ({ setReviews }) => {
     const [name, setName] = useState('');
     const [content, setContent] = useState('');
     const [rating, setRating] = useState(0);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
 
     // Handle rating changes
     const handleRatingClick = (selectedRating) => {
         setRating(selectedRating);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null);
+        setSuccess(null);
+
         if (name && content) {
-            onAddReview({ author: name, content, rating, avatarUrl: "/user.jpg" });
-            setName('');
-            setContent('');
-            setRating(0);
+            try {
+                const APP_URL = import.meta.env.VITE_API_URL;
+                const response = await axios.post(`${APP_URL}/api/feedback`, {
+                    name,
+                    feedback: content,
+                    rating
+                });
+
+                if (response.status === 201) {
+                    setSuccess('Thank you for your feedback!');
+                    setReviews(prev => !prev);
+                    setName('');
+                    setContent('');
+                    setRating(0);
+                } else {
+                    setError('Failed to submit feedback. Please try again later.');
+                }
+            } catch (err) {
+                console.log(err)
+                setError('Failed to submit feedback. Please try again later.');
+            }
+        } else {
+            setError('Please fill in all fields.');
         }
     };
 
@@ -26,6 +51,8 @@ const AddReview = ({ onAddReview }) => {
         <div className="container mx-auto px-4 py-12">
             <h2 className="text-3xl font-bold text-center mb-8">Share Your Experience</h2>
             <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
+                {error && <div className="mb-4 text-red-500">{error}</div>}
+                {success && <div className="mb-4 text-green-500">{success}</div>}
                 <div className="mb-4">
                     <label htmlFor="name" className="block text-gray-700 font-bold mb-2">Name</label>
                     <input

@@ -1,12 +1,12 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
+/* eslint-disable react/no-unescaped-entities */
+import { useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { FaStar } from 'react-icons/fa';
 import { FaRegStar } from 'react-icons/fa';
+import axios from 'axios';
 
 const StarRating = ({ rating }) => {
     return (
@@ -20,20 +20,20 @@ const StarRating = ({ rating }) => {
     );
 };
 
-const StoryCard = ({ content, author, avatarUrl, rating }) => {
+const StoryCard = ({ feedback, name, avatarUrl, rating }) => {
     return (
         <div className="bg-white p-6 rounded-lg shadow-md mx-2">
             <div className="mb-4">
-                <p className="text-gray-700 text-sm italic mt-2">"{content}"</p>
+                <p className="text-gray-700 text-sm italic mt-2">"{feedback}"</p>
             </div>
             <div className="flex items-center justify-between">
                 <div className='flex items-center'>
                     <img
                         src={avatarUrl}
-                        alt={`${author} avatar`}
+                        alt={`${name} avatar`}
                         className="w-10 h-10 rounded-full mr-4"
                     />
-                    <p className="text-gray-900 font-semibold">{author}</p>
+                    <p className="text-gray-900 font-semibold">{name}</p>
                 </div>
                 <StarRating rating={rating} />
             </div>
@@ -41,25 +41,28 @@ const StoryCard = ({ content, author, avatarUrl, rating }) => {
     );
 };
 
-const HappyStories = ({ newReviews = [] }) => {
-    const [stories, setStories] = useState([
-        {
-            content: "Last year Nov I met her for the 1st time for my anxiety and depression and she was also treating my son for bronchitis. I was so worried for him but after course of her medicine my son is completely OK now & also my anxiety and depression is overcome. She is so caring and humble. I call her anytime and she is always there to explain. Highly recommend this doctor.",
-            author: "Snehal Golambade",
-            avatarUrl: "/user.jpg",
-            rating: 5
-        },
-        {
-            content: "My child had a cough and a frequnet attack. We tried allopathy for the year, but did not get proper results. My friend suggested homeopathy and we consulted with Dr.Pratiksha and we got satisfactory results with homeopathy. I Really Appreciate the Support, communication and care of doctor.",
-            author: "Sanika pitale",
-            avatarUrl: "/user.jpg",
-            rating: 4
-        },
-        // Add more stories as needed
-    ]);
+const HappyStories = () => {
 
-    // Combine existing stories with new reviews
-    const allStories = [...stories, ...newReviews];
+    const APP_URL = import.meta.env.VITE_API_URL;
+    const [stories, setStories] = useState([]);
+
+    useEffect(() => {
+        const fetchStories = async () => {
+            try {
+                const response = await axios.get(`${APP_URL}/api/feedbacks`);
+                if (response.status === 200) {
+                    // Sort feedbacks by createdAt in descending order and take the most recent 10
+                    const sortedFeedbacks = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    const recentFeedbacks = sortedFeedbacks.slice(0, 10);
+                    setStories(recentFeedbacks);
+                }
+            } catch (error) {
+                console.error('Error fetching feedbacks:', error);
+            }
+        };
+
+        fetchStories();
+    }, [APP_URL]);
 
     const settings = {
         dots: true,
@@ -92,11 +95,11 @@ const HappyStories = ({ newReviews = [] }) => {
             <h2 className="text-3xl font-bold text-center mb-2">Happy Stories</h2>
             <p className="text-xl text-center text-gray-600 mb-8">Creating Vibrant Smiles for Healthy Lifestyles!</p>
             <Slider {...settings}>
-                {allStories.map((story, index) => (
+                {stories.map((story, index) => (
                     <StoryCard
                         key={index}
-                        content={story.content}
-                        author={story.author}
+                        feedback={story.feedback}
+                        name={story.name}
                         avatarUrl={story.avatarUrl || "/user.jpg"}
                         rating={story.rating}
                     />

@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/campaigns', protectRoute, addCampaign);
 
 // Get all campaigns
-router.get('/campaigns', protectRoute, getAllCampaigns);
+router.get('/campaigns', getAllCampaigns);
 
 // Update a campaign
 router.put('/campaigns/:id', protectRoute, updateCampaign);
