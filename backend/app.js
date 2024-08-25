@@ -13,7 +13,7 @@ const app = express();
 
 // Setup CORS
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: process.env.CORS,
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
 }));
 
