@@ -46,6 +46,11 @@ router.post(
 // Logout route with authentication middleware
 router.post('/logout', protectRoute, logout);
 
+// Example of a protected route that requires authentication
+router.get('/profile', protectRoute, (req, res) => {
+    res.json({ message: `Welcome ${req.user.fullname}, this is your profile.` });
+});
+
 // Error handling middleware
 router.use((err, req, res, next) => {
     console.error(err.stack);

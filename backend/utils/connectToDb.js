@@ -9,7 +9,7 @@ const connectToDb = async () => {
             dbName: 'sarathi-db'
         })
         if (result) {
-            console.log('Connected to MongoDB');
+            console.log(`Connected to MongoDB: ${result.connection.host}`);
         }
     } catch (error) {
         console.log(error)

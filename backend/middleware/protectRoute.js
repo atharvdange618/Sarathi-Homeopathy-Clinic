@@ -1,14 +1,20 @@
-import User from "../model/user.model.js";
-import jwt from "jsonwebtoken";
+import BlacklistedToken from '../model/blacklistedToken.model.js';
+import jwt from 'jsonwebtoken';
+import User from '../model/user.model.js';
 
 export const protectRoute = async (req, res, next) => {
     try {
-        // Extract token from Authorization header
         const authHeader = req.headers.authorization;
-        const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
+        const token = authHeader && authHeader.split(' ')[1];
 
         if (!token) {
             return res.status(401).json({ error: "Unauthorized: No Token Provided" });
+        }
+
+        // Check if the token is in the blacklist
+        const blacklistedToken = await BlacklistedToken.findOne({ token });
+        if (blacklistedToken) {
+            return res.status(401).json({ error: "Unauthorized: Token is blacklisted" });
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);

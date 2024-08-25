@@ -1,6 +1,8 @@
 import User from '../model/user.model.js';
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { generateToken } from '../utils/generateToken.js';
+import BlacklistedToken from '../model/blacklistedToken.model.js'
 
 // Signup Controller
 export const signup = async (req, res) => {
@@ -60,9 +62,26 @@ export const login = async (req, res) => {
 // Logout Controller
 export const logout = async (req, res) => {
     try {
+        const authHeader = req.headers.authorization;
+        const token = authHeader && authHeader.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ error: "Unauthorized: No Token Provided" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (!decoded) {
+            return res.status(401).json({ error: "Unauthorized: Invalid Token" });
+        }
+
+        // Save the token to the blacklist
+        const blacklistedToken = new BlacklistedToken({ token });
+        await blacklistedToken.save();
+
         res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
