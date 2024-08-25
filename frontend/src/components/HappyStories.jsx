@@ -1,5 +1,7 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/prop-types */
+import { useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -39,8 +41,8 @@ const StoryCard = ({ content, author, avatarUrl, rating }) => {
     );
 };
 
-const HappyStories = () => {
-    const stories = [
+const HappyStories = ({ newReviews = [] }) => {
+    const [stories, setStories] = useState([
         {
             content: "Last year Nov I met her for the 1st time for my anxiety and depression and she was also treating my son for bronchitis. I was so worried for him but after course of her medicine my son is completely OK now & also my anxiety and depression is overcome. She is so caring and humble. I call her anytime and she is always there to explain. Highly recommend this doctor.",
             author: "Snehal Golambade",
@@ -54,7 +56,10 @@ const HappyStories = () => {
             rating: 4
         },
         // Add more stories as needed
-    ];
+    ]);
+
+    // Combine existing stories with new reviews
+    const allStories = [...stories, ...newReviews];
 
     const settings = {
         dots: true,
@@ -87,12 +92,12 @@ const HappyStories = () => {
             <h2 className="text-3xl font-bold text-center mb-2">Happy Stories</h2>
             <p className="text-xl text-center text-gray-600 mb-8">Creating Vibrant Smiles for Healthy Lifestyles!</p>
             <Slider {...settings}>
-                {stories.map((story, index) => (
+                {allStories.map((story, index) => (
                     <StoryCard
                         key={index}
                         content={story.content}
                         author={story.author}
-                        avatarUrl={story.avatarUrl}
+                        avatarUrl={story.avatarUrl || "/user.jpg"}
                         rating={story.rating}
                     />
                 ))}
