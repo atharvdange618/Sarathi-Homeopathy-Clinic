@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from 'axios';
 
 function Contact() {
     const [formData, setFormData] = useState({
@@ -8,6 +9,8 @@ function Contact() {
         message: '',
     });
 
+    const APP_URL = import.meta.env.VITE_API_URL;
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -15,11 +18,20 @@ function Contact() {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const message = `Name: ${formData.name}%0AContact: ${formData.number}%0AMessage: ${formData.message}`;
-        const whatsappUrl = `https://api.whatsapp.com/send?phone=919325643953&text=${message}`;
-        window.open(whatsappUrl, '_blank');
+
+        try {
+            // Send POST request to add appointment
+            await axios.post(`${APP_URL}/api/appointments`, formData);
+
+            // Redirect to WhatsApp
+            const message = `Name: ${formData.name}%0AContact: ${formData.number}%0AMessage: ${formData.message}`;
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=919325643953&text=${message}`;
+            window.open(whatsappUrl, '_blank');
+        } catch (error) {
+            console.error('Error adding appointment:', error);
+        }
     };
 
     return (

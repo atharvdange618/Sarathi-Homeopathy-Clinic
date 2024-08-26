@@ -44,7 +44,7 @@ router.post(
 );
 
 // Logout route with authentication middleware
-router.post('/logout', protectRoute, logout);
+router.get('/logout', protectRoute, logout);
 
 // Example of a protected route that requires authentication
 router.get('/profile', protectRoute, (req, res) => {

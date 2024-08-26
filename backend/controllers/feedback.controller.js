@@ -1,4 +1,5 @@
 import Feedback from '../model/feedback.model.js';
+import Notification from '../model/notification.model.js';
 
 // Add new feedback
 export const addFeedback = async (req, res) => {
@@ -16,6 +17,19 @@ export const addFeedback = async (req, res) => {
         });
 
         await newFeedback.save();
+
+        // Create a notification for the new feedback
+        const notification = new Notification({
+            type: 'new_review',
+            message: `New review added by ${name}`,
+            data: {
+                reviewId: newFeedback._id,
+                rating: rating,
+            },
+        });
+
+        await notification.save();
+
         res.status(201).json({ message: "Feedback submitted successfully" });
     } catch (error) {
         console.error("Error submitting feedback", error);
