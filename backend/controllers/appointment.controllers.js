@@ -20,7 +20,7 @@ export const addAppointment = async (req, res) => {
 
         await notification.save();
 
-        res.status(201).json({ message: "Appointment saved successfully", newAppointment });
+        res.status(201).json({ message: "Appointment added successfully", newAppointment });
     } catch (error) {
         console.error('Error adding appointment:', error);
         res.status(500).json({ error: 'Internal server error' });

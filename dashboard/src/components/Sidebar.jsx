@@ -87,8 +87,11 @@ function Sidebar() {
                 <Link to="/patients" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">
                     Patient Management
                 </Link>
-                <Link to="/content" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">
-                    Content Management
+                <Link to="/campaign" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">
+                    Campaign Management
+                </Link>
+                <Link to="/feedback" className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700">
+                    Feedback Management
                 </Link>
                 <Link to="/notifications" className="py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 flex justify-between items-center">
                     <span>Notifications</span>

@@ -6,7 +6,8 @@ import Layout from "./components/Layout";
 const Login = lazy(() => import("./components/Login"));
 const Dashboard = lazy(() => import("./components/Dashboard"));
 const PatientManagement = lazy(() => import("./components/PatientManagement"));
-const ContentManagement = lazy(() => import("./components/ContentManagement"));
+const CampaignManagement = lazy(() => import("./components/CampaignManagement"));
+const FeedbackManagement = lazy(() => import("./components/FeedbackManagement"));
 const Notifications = lazy(() => import("./components/Notifications"));
 const NotFound = lazy(() => import("./NotFound"));
 
@@ -30,7 +31,8 @@ const AppRoutes = () => {
                 }>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/patients" element={<PatientManagement />} />
-                    <Route path="/content" element={<ContentManagement />} />
+                    <Route path="/campaign" element={<CampaignManagement />} />
+                    <Route path="/feedback" element={<FeedbackManagement />} />
                     <Route path="/notifications" element={<Notifications />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
