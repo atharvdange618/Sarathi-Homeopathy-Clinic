@@ -26,13 +26,16 @@ function Contact() {
             // Send POST request to add appointment
             const response = await axios.post(`${APP_URL}/api/appointments`, formData);
             if (response.status === 201) {
-                toast.success('Appointment added successfully!');
+                toast.success(response.data.message);
             }
 
-            // Redirect to WhatsApp
-            const message = `Name: ${formData.name}%0AContact: ${formData.number}%0AMessage: ${formData.message}`;
-            const whatsappUrl = `https://api.whatsapp.com/send?phone=919325643953&text=${message}`;
-            window.open(whatsappUrl, '_blank');
+            setTimeout(() => {
+                // Redirect to WhatsApp
+                const message = `Name: ${formData.name}%0AContact: ${formData.number}%0AMessage: ${formData.message}`;
+                const whatsappUrl = `https://api.whatsapp.com/send?phone=919325643953&text=${message}`;
+                window.open(whatsappUrl, '_blank');
+            }, 1000);
+
             setFormData({
                 name: '',
                 number: '',
