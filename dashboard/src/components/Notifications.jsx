@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
@@ -18,10 +17,12 @@ function Notifications() {
                     Authorization: `Bearer ${token}`
                 }
             })
+            if (response.status === 200) {
+                toast.success(response.data.message);
+            }
         } catch (error) {
-            toast.error(error.message)
+            toast.error(error.message);
         }
-
     }, [APP_URL, token]);
 
     const fetchNotifications = async () => {
@@ -30,12 +31,12 @@ function Notifications() {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            })
+            });
             if (response.status === 200) {
                 setNotifications(response.data);
             }
         } catch (error) {
-            toast.error(error.message)
+            toast.error(error.message);
         }
     };
 
@@ -45,11 +46,13 @@ function Notifications() {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            })
-            toast.success('All notifications cleared!')
-            setNotifications([]);
+            });
+            if (response.status === 200) {
+                toast.success(response.data.message);
+                setNotifications([]);
+            }
         } catch (error) {
-            toast.error(error.message)
+            toast.error(error.message);
         }
     };
 
@@ -57,17 +60,31 @@ function Notifications() {
         <div className="p-6">
             <Toaster />
             <h1 className="text-2xl font-bold mb-4">Notifications</h1>
-            <button onClick={clearNotifications} className="bg-red-500 text-white px-4 py-2 rounded mb-4 hover:bg-red-600">
+            <button
+                onClick={clearNotifications}
+                className="bg-red-500 text-white px-4 py-2 rounded mb-4 hover:bg-red-600"
+            >
                 Clear All Notifications
             </button>
             <div className="space-y-4">
-                {notifications.map(notification => (
-                    <div key={notification._id} className="bg-white p-4 rounded shadow">
-                        <h2 className="text-lg font-semibold">{notification.type === 'new_review' ? 'New Review Added' : 'New Appointment Added'}</h2>
-                        <p>{notification.message}</p>
-                        <p className="text-sm text-gray-500 mt-2">{new Date(notification.createdAt).toLocaleString()}</p>
-                    </div>
-                ))}
+                {notifications.length === 0 ? (
+                    <p className="text-center text-gray-500">No notifications available</p>
+                ) : (
+                    notifications.map(notification => (
+                        <div
+                            key={notification._id}
+                            className="bg-white p-4 rounded shadow-sm border border-gray-200"
+                        >
+                            <h2 className="text-lg font-semibold mb-2">
+                                {notification.type === 'new_review' ? 'New Review Added' : 'New Appointment Added'}
+                            </h2>
+                            <p className="mb-2">{notification.message}</p>
+                            <p className="text-sm text-gray-500">
+                                {new Date(notification.createdAt).toLocaleString()}
+                            </p>
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );

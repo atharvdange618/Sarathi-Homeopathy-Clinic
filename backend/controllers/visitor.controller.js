@@ -1,3 +1,4 @@
+import cron from 'node-cron';
 import Visitor from '../model/visitor.model.js';
 
 // Get daily visitor count
@@ -44,3 +45,22 @@ export const getMonthlyVisitors = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+// Function to reset the daily visitor count
+const resetDailyVisitorCount = async () => {
+    try {
+        const startOfDay = new Date().setHours(0, 0, 0, 0);
+        await Visitor.deleteMany({
+            timestamp: { $lt: startOfDay }
+        });
+        console.log('Daily visitor count reset successfully');
+    } catch (error) {
+        console.error('Error resetting daily visitor count:', error);
+    }
+};
+
+// Schedule the job to run at 00:00 (midnight) every day
+cron.schedule('0 0 * * *', () => {
+    console.log('Running daily visitor count reset');
+    resetDailyVisitorCount();
+});

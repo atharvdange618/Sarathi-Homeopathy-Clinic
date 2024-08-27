@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 function CampaignManagement() {
     const [campaigns, setCampaigns] = useState([]);
@@ -15,7 +16,7 @@ function CampaignManagement() {
     const [editingId, setEditingId] = useState(null);
 
     const APP_URL = import.meta.env.VITE_API_URL;
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         fetchCampaigns();
@@ -23,12 +24,12 @@ function CampaignManagement() {
 
     const fetchCampaigns = async () => {
         try {
-            const response = await axios.get(`${APP_URL}/api/campaigns`)
+            const response = await axios.get(`${APP_URL}/api/campaigns`);
             if (response.status === 200) {
                 setCampaigns(response.data);
             }
         } catch (error) {
-            toast.error(error.message)
+            toast.error(error.message);
         }
     };
 
@@ -44,7 +45,7 @@ function CampaignManagement() {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
-                })
+                });
 
                 if (response.status === 200) {
                     toast.success(response.data.message);
@@ -54,8 +55,7 @@ function CampaignManagement() {
                     setEditingId(null);
                 }
             } catch (error) {
-                console.error('Error updating campaign', error)
-                toast.error(error.message)
+                toast.error(error.message);
             }
         } else {
             try {
@@ -63,7 +63,7 @@ function CampaignManagement() {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
-                })
+                });
 
                 if (response.status === 201) {
                     toast.success(response.data.message);
@@ -71,8 +71,7 @@ function CampaignManagement() {
                     setNewCampaign({ title: '', description: '', image: '', startDate: '', endDate: '' });
                 }
             } catch (error) {
-                console.error('Error adding campaign', error)
-                toast.error(error.message)
+                toast.error(error.message);
             }
         }
     };
@@ -89,15 +88,14 @@ function CampaignManagement() {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            })
+            });
 
             if (response.status === 200) {
                 toast.success(response.data.message);
                 fetchCampaigns();
             }
         } catch (error) {
-            console.error('Error deleting campaign', error)
-            toast.error(error.message)
+            toast.error(error.message);
         }
     };
 
@@ -150,7 +148,8 @@ function CampaignManagement() {
                 </button>
             </form>
 
-            <table className="w-full border-collapse border border-gray-300">
+            {/* Desktop View */}
+            <table className="w-full border-collapse border border-gray-300 hidden md:table">
                 <thead>
                     <tr className="bg-gray-100">
                         <th className="border border-gray-300 p-2">Title</th>
@@ -179,6 +178,28 @@ function CampaignManagement() {
                     ))}
                 </tbody>
             </table>
+
+            {/* Mobile View */}
+            <div className="md:hidden">
+                {campaigns.map(campaign => (
+                    <div key={campaign._id} className="bg-white shadow rounded-lg p-4 mb-4">
+                        <div className="mb-2 flex justify-between">
+                            <h3 className="font-semibold text-lg">{campaign.title}</h3>
+                            <div>
+                                <button onClick={() => handleEdit(campaign)} className="text-blue-500 mr-4" aria-label="Edit">
+                                    <FaEdit />
+                                </button>
+                                <button onClick={() => handleDelete(campaign._id)} className="text-red-500" aria-label="Delete">
+                                    <FaTrash />
+                                </button>
+                            </div>
+                        </div>
+                        <p className="text-gray-600 mb-2"><strong>Description:</strong> {campaign.description.substring(0, 100)}...</p>
+                        <p className="text-gray-600 mb-2"><strong>Start Date:</strong> {new Date(campaign.startDate).toLocaleDateString()}</p>
+                        <p className="text-gray-600 mb-2"><strong>End Date:</strong> {new Date(campaign.endDate).toLocaleDateString()}</p>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }

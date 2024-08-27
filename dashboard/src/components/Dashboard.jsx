@@ -65,7 +65,7 @@ function Dashboard() {
     };
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 mt-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white p-6 rounded-lg shadow">
                     <h2 className="text-xl font-semibold mb-2">Daily Visitors</h2>
