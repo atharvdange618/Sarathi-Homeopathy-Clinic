@@ -18,9 +18,16 @@ const PORT = process.env.PORT || 3000
 
 const app = express();
 
+const allowedOrigins = process.env.CORS.split(',');
 // Setup CORS
 app.use(cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
 }));
 
