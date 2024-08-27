@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 function Contact() {
     const [formData, setFormData] = useState({
@@ -23,12 +24,21 @@ function Contact() {
 
         try {
             // Send POST request to add appointment
-            await axios.post(`${APP_URL}/api/appointments`, formData);
+            const response = await axios.post(`${APP_URL}/api/appointments`, formData);
+            if (response.status === 201) {
+                toast.success('Appointment added successfully!');
+            }
 
             // Redirect to WhatsApp
             const message = `Name: ${formData.name}%0AContact: ${formData.number}%0AMessage: ${formData.message}`;
             const whatsappUrl = `https://api.whatsapp.com/send?phone=919325643953&text=${message}`;
             window.open(whatsappUrl, '_blank');
+            setFormData({
+                name: '',
+                number: '',
+                date: '',
+                message: '',
+            })
         } catch (error) {
             console.error('Error adding appointment:', error);
         }
@@ -36,6 +46,7 @@ function Contact() {
 
     return (
         <section id="contact" className="container mx-auto px-4 py-16">
+            <Toaster />
             <h2 className="text-2xl md:text-3xl font-bold mb-4 text-center">How to Find Us</h2>
             <p className="mb-8 text-center">Fill up the Form and Ask Your Queries</p>
             <div className="flex flex-col md:flex-row items-center justify-center space-y-8 md:space-y-0 md:space-x-8">
