@@ -31,7 +31,7 @@ function Contact() {
 
             setTimeout(() => {
                 // Redirect to WhatsApp
-                const message = `Name: ${formData.name}%0AContact: ${formData.number}%0AMessage: ${formData.message}`;
+                const message = `Name: ${formData.name}%0AContact: ${formData.number}%0AComplaints: ${formData.message}`;
                 const whatsappUrl = `https://api.whatsapp.com/send?phone=919325643953&text=${message}`;
                 window.open(whatsappUrl, '_blank');
             }, 1000);
@@ -104,7 +104,7 @@ function Contact() {
                     </div>
                     <div className="mb-4">
                         <textarea
-                            placeholder="Message"
+                            placeholder="Complaints"
                             id="message"
                             className="w-full px-4 py-2 border rounded-md text-black focus:outline-none focus:border-blue-500"
                             value={formData.message}

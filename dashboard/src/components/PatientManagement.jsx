@@ -116,7 +116,7 @@ function PatientManagement() {
                     />
                     <textarea
                         id="message"
-                        placeholder="Additional Notes"
+                        placeholder="Complaints"
                         className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
                         value={newAppointment.message}
                         onChange={handleInputChange}

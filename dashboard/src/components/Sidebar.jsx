@@ -100,15 +100,6 @@ function Sidebar() {
                 </Link>
             </nav>
 
-            <div className="px-4 py-2 border-t border-gray-700">
-                <h3 className="text-sm font-semibold text-gray-300 uppercase">Quick Stats</h3>
-                <ul className="mt-2 text-sm">
-                    <li>Total Users: 1,234</li>
-                    <li>New Today: 56</li>
-                    <li>Active Now: 789</li>
-                </ul>
-            </div>
-
             <div className="px-4 mt-auto">
                 <button className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded" onClick={handleLogout}>
                     Logout
