@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
@@ -6,24 +7,6 @@ function Notifications() {
     const [notifications, setNotifications] = useState([]);
     const APP_URL = import.meta.env.VITE_API_URL;
     const token = localStorage.getItem('token');
-
-    useEffect(() => {
-        fetchNotifications();
-
-        // Mark all notifications as read when component mounts
-        try {
-            const response = axios.get(`${APP_URL}/api/notifications/mark-read`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            if (response.status === 200) {
-                toast.success(response.data.message);
-            }
-        } catch (error) {
-            toast.error(error.message);
-        }
-    }, [APP_URL, token]);
 
     const fetchNotifications = async () => {
         try {
@@ -35,6 +18,18 @@ function Notifications() {
             if (response.status === 200) {
                 setNotifications(response.data);
             }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+
+    const markNotificationsAsRead = async () => {
+        try {
+            const response = await axios.get(`${APP_URL}/api/notifications/mark-read`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
         } catch (error) {
             toast.error(error.message);
         }
@@ -55,6 +50,11 @@ function Notifications() {
             toast.error(error.message);
         }
     };
+
+    useEffect(() => {
+        fetchNotifications();
+        markNotificationsAsRead();
+    }, [APP_URL, token]);
 
     return (
         <div className="p-6">
