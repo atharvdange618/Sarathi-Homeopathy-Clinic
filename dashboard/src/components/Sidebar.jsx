@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai'; // Importing icons
+import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 
 function Sidebar() {
     const [notificationCount, setNotificationCount] = useState(0);
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);  // State to manage sidebar visibility
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
     const APP_URL = import.meta.env.VITE_API_URL;

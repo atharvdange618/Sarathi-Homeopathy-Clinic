@@ -48,7 +48,6 @@ function Layout() {
                 }
             });
             if (response.status === 200) {
-                console.log(response)
                 setNotifications(response.data);
             }
         } catch (error) {
@@ -68,8 +67,15 @@ function Layout() {
     useEffect(() => {
         fetchNotifications();
         setupBrowserNotifications();
-        showNotifications();
+
+        const intervalId = setInterval(fetchNotifications, 500);
+
+        return () => clearInterval(intervalId);
     }, []);
+
+    useEffect(() => {
+        showNotifications();
+    }, [notifications]);
 
     return (
         <div className="flex min-h-screen bg-gray-100">
